@@ -2,6 +2,14 @@ pipeline {
     agent {
         label 'hi-to-cloud'
     }
+    options {
+        timeout(time: 30, unit: 'MINUTES')
+        disableConcurrentBuilds()
+        ansiColor('xterm')
+    }
+    parameters {
+        choice(name: 'Terraform', choices: ['Apply', 'Destroy'], description: 'Pick Action')
+    }
     stages {
         stage('PWD') {
             steps {
@@ -12,6 +20,9 @@ pipeline {
             }
         }
         stage('TF Init') {
+            when{
+                expression{ params.Terraform == 'Apply' }
+            }
             steps {
                 sh """ 
                 terraform init
@@ -19,15 +30,37 @@ pipeline {
             }
         }
         stage('TF Plan') {
+            when{
+                expression{ params.Terraform == 'Apply' }
+            }
             steps {
                 sh """ 
                 terraform plan
                 """
             }
         }
-        stage('Deploy') {
+        stage('TF Apply') {
+            when{
+                expression{ params.Terraform == 'Apply' }
+            }
+            input {
+                message "Should we continue?"
+                ok "Yes, we should."
+            }
             steps {
-                sh 'echo This is Deploy'
+                sh """ 
+                terraform apply -auto-approve
+                """
+            }
+        }
+        stage('TF Destroy') {
+            when{
+                expression{ params.Terraform == 'Destroy' }
+            }
+            steps {
+                sh """ 
+                terraform destroy -auto-approve
+                """
             }
         }
     }
