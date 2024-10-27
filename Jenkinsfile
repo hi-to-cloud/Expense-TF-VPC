@@ -3,6 +3,14 @@ pipeline {
         label 'hi-to-cloud'
     }
     stages {
+        stage('PWD') {
+            steps {
+                sh """ 
+                pwd 
+                ls -l
+                """
+            }
+        }
         stage('TF Init') {
             steps {
                 sh """ 
