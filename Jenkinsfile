@@ -6,7 +6,7 @@ pipeline {
         stage('TF Init') {
             steps {
                 sh """ 
-                cd Expense-TF-VPC
+                cd VPC
                 terraform init
                 """
             }
@@ -14,7 +14,7 @@ pipeline {
         stage('TF Plan') {
             steps {
                 sh """ 
-                cd Expense-TF-VPC
+                cd VPC
                 terraform plan
                 """
             }
