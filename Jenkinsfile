@@ -14,7 +14,6 @@ pipeline {
         stage('TF Init') {
             steps {
                 sh """ 
-                cd VPC
                 terraform init
                 """
             }
@@ -22,7 +21,6 @@ pipeline {
         stage('TF Plan') {
             steps {
                 sh """ 
-                cd VPC
                 terraform plan
                 """
             }
